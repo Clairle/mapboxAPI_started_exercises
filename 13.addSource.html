@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://lib.baomitu.com/jquery/2.2.4/jquery.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map">
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiemhvbmdkaXNodW1hIiwiYSI6ImNsNXJoYXR5eTI2bGgzZW53d2didWF1c3AifQ.6vOplM2NQc_xnJW3aA5ZBA';
+    const map = new mapboxgl.Map({
+        /* 将地图挂载到对应的DOM上 相当于ol的target */
+        container: "map",
+        /* 相当于ol的layers */
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: [114.30, 30.50],
+        zoom: 5
+    })
+
+    map.on('style.load', () => {
+        console.log(map.getStyle()) // http请求之前的图层数目
+        $.ajax({
+            url: "https://geo.datav.aliyun.com/areas_v3/bound/420000_full.json"
+        }).then(res => {
+            map.addSource('hubei', {
+                type: 'geojson',
+                data: res
+            })
+            map.addLayer({
+                id: "hubei-layer",
+                type: 'fill',
+                source: 'hubei',
+                /* 绘制地图的样式 */
+                paint: {
+                    'fill-color': "#ff2d51",
+                    'fill-opacity': 0.5
+                }
+            })
+        })
+    })
+
+    /* 测试http请求之后的图层 */
+    map.on("click", () => {
+        /* 图层加载到map的style属性中了 */
+        console.log(map.getStyle())
+        console.log(map)
+
+        /* removeLayer(id) removeSource(id) */
+    })
+</script>
+</body>
+</html>

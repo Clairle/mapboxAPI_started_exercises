@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v1.0.0/mapbox-gl-language.js'></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #mouse {
+            position: fixed;
+            bottom: 10px;
+            left: 40%;
+            z-index: 100;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #652e5066;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="mouse"></div>
+    <div id="map">
+<script>
+    /* 3、实例化地图 */
+    mapboxgl.accessToken = 'pk.eyJ1IjoiemhvbmdkaXNodW1hIiwiYSI6ImNsNXJoYXR5eTI2bGgzZW53d2didWF1c3AifQ.6vOplM2NQc_xnJW3aA5ZBA';
+    const map = new mapboxgl.Map({
+        /* 将地图挂载到对应的DOM上 相当于ol的target */
+        container: "map",
+        /* 相当于ol的layers */
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: [114.30, 30.50],
+        zoom: 10
+    })
+
+    /* 定制化背景 */
+    map.on("style.load", () => {
+        map.setFog({
+
+        })
+    })
+
+    // 地图控件
+    map.addControl(new mapboxgl.FullscreenControl())
+    // 导航控件
+    map.addControl(
+        new mapboxgl.NavigationControl(),
+        /* top-left,top-right,bottom-right,bottom-left */
+        'bottom-right'
+    )
+
+    // 比例尺
+    map.addControl(
+        new mapboxgl.ScaleControl()
+    )
+
+    // 鼠标位置控件
+    map.on('mousemove', (e) =>{
+        <!-- console.log(e) -->
+        let {lng, lat} = e.lngLat;
+        document.getElementById('mouse').innerHTML = `经度:${lng.toFixed(2)},纬度:${lat.toFixed(2)}`
+    })
+
+    /* 汉化 */
+    map.addControl(
+        new MapboxLanguage({
+            defaultLanguage:'zh-Hans'
+        })
+    )
+</script>
+</body>
+</html>
